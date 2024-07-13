@@ -7,3 +7,27 @@ Description:
 The Lambda function fetches all EBS snapshots owned by the same account ('self') and also retrieves a list of active EC2 instances (running and stopped). 
 For each snapshot, it checks if the associated volume (if exists) is not associated with any active instance. If it finds a stale snapshot, 
 it deletes it, effectively optimizing storage costs.
+
+
+=============================================================================================================================================
+
+The above statment AWS Lambda function that identifies and deletes stale EBS (Elastic Block Store) snapshots. Here's a breakdown of what the code does:
+
+1. It uses boto3 to interact with AWS EC2 services.
+2. It retrieves all EBS snapshots owned by the account.
+3. It gets a list of all running EC2 instances.
+4. It then iterates through each snapshot and:
+
+5. Deletes snapshots not attached to any volume
+For snapshots attached to volumes, it checks if the volume exists and is attached to a running instance
+If the volume doesn't exist or isn't attached to a running instance, it deletes the snapshot
+
+It prints messages for each deleted snapshot, explaining the reason for deletion.
+
+This script can help optimize costs by removing unnecessary snapshots. However, there are some considerations and potential improvements:
+
+1. Error handling: The code could benefit from more comprehensive error handling.
+2. Pagination: For accounts with many snapshots, you might need to handle pagination in the describe_snapshots call.
+3. Retention policy: You might want to add a retention policy based on snapshot age.
+4. Dry run: Consider adding a dry run mode to review what would be deleted before actually deleting.
+Tagging: You could use tags to exclude certain snapshots from deletion.
